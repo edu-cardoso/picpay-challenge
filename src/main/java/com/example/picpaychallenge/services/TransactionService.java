@@ -30,7 +30,7 @@ public class TransactionService {
     }
   }
 
-  public void create(TransactionDTO transaction) {
+  public Transaction create(TransactionDTO transaction) {
     var sender = userService.findById(transaction.sender());
     var receiver = userService.findById(transaction.receiver());
 
@@ -45,5 +45,7 @@ public class TransactionService {
     repository.save(entity);
     userService.save(sender);
     userService.save(receiver);
+
+    return entity;
   }
 }
