@@ -27,7 +27,6 @@ public class User implements Serializable {
   public User() {
   }
 
-
   public User(UUID id, String fullName, String document, String email, String password, BigDecimal balance, UserType userType) {
     this.id = id;
     this.fullName = fullName;
