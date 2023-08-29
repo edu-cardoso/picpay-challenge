@@ -10,18 +10,18 @@ import java.util.UUID;
 @Table(name = "transactions")
 public class Transaction implements Serializable {
   private static final Long serialVersionUID = 1L;
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  private User sender;
-  private User receiver;
+  private UUID sender;
+  private UUID receiver;
   private BigDecimal value;
 
   public Transaction() {
   }
 
-  public Transaction(UUID id, User sender, User receiver, BigDecimal value) {
+  public Transaction(UUID id, UUID sender, UUID receiver, BigDecimal value) {
     this.id = id;
     this.sender = sender;
     this.receiver = receiver;
@@ -36,19 +36,19 @@ public class Transaction implements Serializable {
     this.id = id;
   }
 
-  public User getSender() {
+  public UUID getSender() {
     return sender;
   }
 
-  public void setSender(User sender) {
+  public void setSender(UUID sender) {
     this.sender = sender;
   }
 
-  public User getReceiver() {
+  public UUID getReceiver() {
     return receiver;
   }
 
-  public void setReceiver(User receiver) {
+  public void setReceiver(UUID receiver) {
     this.receiver = receiver;
   }
 
@@ -61,6 +61,19 @@ public class Transaction implements Serializable {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Transaction that)) return false;
+
+    return getId().equals(that.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getId().hashCode();
+  }
+
+  @Override
   public String toString() {
     return "Transaction{" +
             "id=" + id +
@@ -70,3 +83,4 @@ public class Transaction implements Serializable {
             '}';
   }
 }
+
