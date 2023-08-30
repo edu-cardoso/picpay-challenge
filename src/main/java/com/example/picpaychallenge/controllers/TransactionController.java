@@ -1,6 +1,7 @@
 package com.example.picpaychallenge.controllers;
 
 import com.example.picpaychallenge.dtos.TransactionDTO;
+import com.example.picpaychallenge.dtos.TransactionResponseDTO;
 import com.example.picpaychallenge.entities.Transaction;
 import com.example.picpaychallenge.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class TransactionController {
   private TransactionService service;
 
   @PostMapping
-  public ResponseEntity<Transaction> create(@RequestBody TransactionDTO transactionDto) {
+  public ResponseEntity<TransactionResponseDTO> create(@RequestBody TransactionDTO transactionDto) {
     var transaction = service.create(transactionDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
   }

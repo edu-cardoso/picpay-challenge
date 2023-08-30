@@ -1,6 +1,8 @@
 package com.example.picpaychallenge.services;
 
 import com.example.picpaychallenge.dtos.TransactionDTO;
+import com.example.picpaychallenge.dtos.TransactionResponseDTO;
+import com.example.picpaychallenge.dtos.UserDTO;
 import com.example.picpaychallenge.entities.Transaction;
 import com.example.picpaychallenge.entities.User;
 import com.example.picpaychallenge.entities.UserType;
@@ -30,7 +32,7 @@ public class TransactionService {
     }
   }
 
-  public Transaction create(TransactionDTO transaction) {
+  public TransactionResponseDTO create(TransactionDTO transaction) {
     var sender = userService.findById(transaction.sender());
     var receiver = userService.findById(transaction.receiver());
 
@@ -46,6 +48,6 @@ public class TransactionService {
     userService.save(sender);
     userService.save(receiver);
 
-    return entity;
+    return new TransactionResponseDTO(entity.getId(), new UserDTO(sender), new UserDTO(receiver), entity.getValue());
   }
 }
