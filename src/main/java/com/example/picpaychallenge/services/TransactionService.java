@@ -36,6 +36,14 @@ public class TransactionService {
     }
   }
 
+  public void changeUserBalance(User sender, User receiver, BigDecimal value) {
+    sender.setBalance(sender.getBalance().subtract(value));
+    receiver.setBalance(receiver.getBalance().add(value));
+
+    userService.save(sender);
+    userService.save(receiver);
+  }
+
   public TransactionResponseDTO create(TransactionDTO transaction) {
     var sender = userService.findById(transaction.sender());
     var receiver = userService.findById(transaction.receiver());
@@ -45,12 +53,8 @@ public class TransactionService {
     var entity = new Transaction();
     BeanUtils.copyProperties(transaction, entity);
 
-    sender.setBalance(sender.getBalance().subtract(transaction.value()));
-    receiver.setBalance(receiver.getBalance().add(transaction.value()));
-
     repository.save(entity);
-    userService.save(sender);
-    userService.save(receiver);
+    changeUserBalance(sender, receiver, transaction.value());
 
     return new TransactionResponseDTO(entity.getId(), new UserDTO(sender), new UserDTO(receiver), entity.getValue());
   }
