@@ -22,7 +22,7 @@ public class TransactionService {
   @Autowired
   private TransactionRepository repository;
 
-  public void verifyTransaction(User sender, BigDecimal value) {
+  public void verifyTransaction(User sender, User receiver, BigDecimal value) {
     if (sender.getUserType() == UserType.SHOPKEEPER) {
       throw new RuntimeException("Lojistas não estão habilitados a realizar transferência");
     }
@@ -30,13 +30,17 @@ public class TransactionService {
     if (sender.getBalance().compareTo(value) < 0) {
       throw new RuntimeException("Saldo insuficiênte");
     }
+
+    if (sender.getId() == receiver.getId()) {
+      throw new RuntimeException("Transferências não podem ser feitas para a própria conta");
+    }
   }
 
   public TransactionResponseDTO create(TransactionDTO transaction) {
     var sender = userService.findById(transaction.sender());
     var receiver = userService.findById(transaction.receiver());
 
-    verifyTransaction(sender, transaction.value());
+    verifyTransaction(sender, receiver, transaction.value());
 
     var entity = new Transaction();
     BeanUtils.copyProperties(transaction, entity);
