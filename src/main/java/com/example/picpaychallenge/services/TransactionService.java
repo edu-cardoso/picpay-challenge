@@ -7,6 +7,7 @@ import com.example.picpaychallenge.entities.Transaction;
 import com.example.picpaychallenge.entities.User;
 import com.example.picpaychallenge.entities.UserType;
 import com.example.picpaychallenge.repositories.TransactionRepository;
+import com.example.picpaychallenge.services.Exceptions.TransactionNotAllowedException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,15 @@ public class TransactionService {
 
   public void verifyTransaction(User sender, User receiver, BigDecimal value) {
     if (sender.getUserType() == UserType.SHOPKEEPER) {
-      throw new RuntimeException("Lojistas não estão habilitados a realizar transferência");
+      throw new TransactionNotAllowedException("Lojistas não estão habilitados a realizar transferência");
     }
 
     if (sender.getBalance().compareTo(value) < 0) {
-      throw new RuntimeException("Saldo insuficiênte");
+      throw new TransactionNotAllowedException("Saldo insuficiênte");
     }
 
     if (sender.getId() == receiver.getId()) {
-      throw new RuntimeException("Transferências não podem ser feitas para a própria conta");
+      throw new TransactionNotAllowedException("Transferências não podem ser feitas para a própria conta");
     }
   }
 

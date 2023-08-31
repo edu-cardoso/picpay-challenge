@@ -1,6 +1,7 @@
 package com.example.picpaychallenge.controllers.Exceptions;
 
 import com.example.picpaychallenge.services.Exceptions.NotFoundException;
+import com.example.picpaychallenge.services.Exceptions.TransactionNotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,4 +18,13 @@ public class ControllerExceptionHandler {
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
   }
+  @ExceptionHandler(TransactionNotAllowedException.class)
+  public ResponseEntity<StandardError> unauthorizedTransaction(TransactionNotAllowedException e, HttpServletRequest request) {
+    var err = new StandardError();
+    err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+    err.setMessage(e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
+  }
+
 }
