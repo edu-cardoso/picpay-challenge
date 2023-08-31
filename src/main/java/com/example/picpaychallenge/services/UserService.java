@@ -2,6 +2,7 @@ package com.example.picpaychallenge.services;
 
 import com.example.picpaychallenge.entities.User;
 import com.example.picpaychallenge.repositories.UserRepository;
+import com.example.picpaychallenge.services.Exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class UserService {
 
   public User findById(UUID id) {
     var user = repository.findById(id);
-    return user.orElseThrow(() -> new RuntimeException("user not found"));
+    return user.orElseThrow(() -> new NotFoundException("user not found"));
   }
 
   public void save(User user) {
