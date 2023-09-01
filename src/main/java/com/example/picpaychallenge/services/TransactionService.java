@@ -10,9 +10,13 @@ import com.example.picpaychallenge.repositories.TransactionRepository;
 import com.example.picpaychallenge.services.Exceptions.TransactionNotAllowedException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -22,6 +26,9 @@ public class TransactionService {
 
   @Autowired
   private TransactionRepository repository;
+
+  @Autowired
+  private RestTemplate restTemplate;
 
   public void verifyTransaction(User sender, User receiver, BigDecimal value) {
     if (sender.getUserType() == UserType.SHOPKEEPER) {
@@ -34,6 +41,13 @@ public class TransactionService {
 
     if (sender.getId() == receiver.getId()) {
       throw new TransactionNotAllowedException("Transferências não podem ser feitas para a própria conta");
+    }
+  }
+
+  public void authorizeTransaction() {
+    var response = restTemplate.getForEntity("https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6", Map.class);
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new RuntimeException("Transação não autorizada");
     }
   }
 
@@ -54,6 +68,7 @@ public class TransactionService {
     var entity = new Transaction();
     BeanUtils.copyProperties(transaction, entity);
 
+    authorizeTransaction();
     repository.save(entity);
     changeUserBalance(sender, receiver, transaction.value());
 
