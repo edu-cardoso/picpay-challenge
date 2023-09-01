@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -17,15 +18,17 @@ public class Transaction implements Serializable {
   private UUID sender;
   private UUID receiver;
   private BigDecimal value;
+  private Instant timestamp;
 
   public Transaction() {
   }
 
-  public Transaction(UUID id, UUID sender, UUID receiver, BigDecimal value) {
+  public Transaction(UUID id, UUID sender, UUID receiver, BigDecimal value, Instant timestamp) {
     this.id = id;
     this.sender = sender;
     this.receiver = receiver;
     this.value = value;
+    this.timestamp = timestamp;
   }
 
   public UUID getId() {
@@ -60,6 +63,14 @@ public class Transaction implements Serializable {
     this.value = value;
   }
 
+  public Instant getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Instant timestamp) {
+    this.timestamp = timestamp;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -80,6 +91,7 @@ public class Transaction implements Serializable {
             ", sender=" + sender +
             ", receiver=" + receiver +
             ", value=" + value +
+            ", timestamp=" + timestamp +
             '}';
   }
 }

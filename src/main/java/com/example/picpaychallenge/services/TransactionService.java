@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -68,12 +69,13 @@ public class TransactionService {
 
     var entity = new Transaction();
     BeanUtils.copyProperties(transaction, entity);
+    entity.setTimestamp(Instant.now());
 
     authorizeTransaction();
     repository.save(entity);
     changeUserBalance(sender, receiver, transaction.value());
 
-    return new TransactionResponseDTO(entity.getId(), new UserDTO(sender), new UserDTO(receiver), entity.getValue());
+    return new TransactionResponseDTO(entity.getId(), new UserDTO(sender), new UserDTO(receiver), entity.getValue(), entity.getTimestamp());
   }
 
   public List<Transaction> findAll() {
