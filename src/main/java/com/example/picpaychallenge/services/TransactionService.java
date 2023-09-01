@@ -10,13 +10,14 @@ import com.example.picpaychallenge.repositories.TransactionRepository;
 import com.example.picpaychallenge.services.Exceptions.TransactionNotAllowedException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import java.util.UUID;
 
 @Service
 public class TransactionService {
@@ -73,5 +74,9 @@ public class TransactionService {
     changeUserBalance(sender, receiver, transaction.value());
 
     return new TransactionResponseDTO(entity.getId(), new UserDTO(sender), new UserDTO(receiver), entity.getValue());
+  }
+
+  public List<Transaction> findAll() {
+    return repository.findAll();
   }
 }
